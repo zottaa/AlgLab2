@@ -4,7 +4,7 @@
 # compile CXX with C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.27.29110/bin/Hostx86/x86/cl.exe
 CXX_DEFINES = 
 
-CXX_INCLUDES = 
+CXX_INCLUDES = -IC:\Users\sasha\CLionProjects\AlgLab2\lib\googletest\googletest\include -IC:\Users\sasha\CLionProjects\AlgLab2\lib\googletest\googletest
 
 CXX_FLAGS = /DWIN32 /D_WINDOWS /GR /EHsc /Zi /Ob0 /Od /RTC1 -MDd -std:c++14
 

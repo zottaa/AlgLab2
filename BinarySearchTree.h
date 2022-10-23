@@ -6,6 +6,7 @@
 #define ALGLAB2_BINARYSEARCHTREE_H
 
 #include <stack>
+#include <string>
 
 template<class K, class T>
 class BinarySearchTree {
@@ -141,7 +142,8 @@ public:
 
     }
 
-    ~BinarySearchTree() { //TODO
+    ~BinarySearchTree() {
+        this->clear();
     }
 
     T &recursiveSearch(K key) {
@@ -301,6 +303,26 @@ public:
 
     int numberOfKeysBiggerThen(K key) {
 
+    }
+
+    std::string toString() {
+        std::string str ;
+        Node* temp = root;
+        if (temp != nullptr) {
+            std::stack<Node *> stack;
+            while (!stack.empty() || temp != nullptr) {
+                if (temp != nullptr) {
+                    stack.push(temp);
+                    temp = temp->left;
+                } else {
+                    temp = stack.top();
+                    str += std::to_string(temp->key);
+                    stack.pop();
+                    temp = temp->right;
+                }
+            }
+        }
+        return str;
     }
 
     class Iterator;

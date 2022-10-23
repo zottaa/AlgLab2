@@ -52,58 +52,61 @@ CMAKE_SOURCE_DIR = C:\Users\sasha\CLionProjects\AlgLab2
 CMAKE_BINARY_DIR = C:\Users\sasha\CLionProjects\AlgLab2\cmake-build-debug
 
 # Include any dependencies generated for this target.
-include CMakeFiles\Alglab2.dir\depend.make
+include CMakeFiles\AlgLab2.dir\depend.make
 
 # Include the progress variables for this target.
-include CMakeFiles\Alglab2.dir\progress.make
+include CMakeFiles\AlgLab2.dir\progress.make
 
 # Include the compile flags for this target's objects.
-include CMakeFiles\Alglab2.dir\flags.make
+include CMakeFiles\AlgLab2.dir\flags.make
 
-CMakeFiles\Alglab2.dir\main.cpp.obj: CMakeFiles\Alglab2.dir\flags.make
-CMakeFiles\Alglab2.dir\main.cpp.obj: ..\main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\sasha\CLionProjects\AlgLab2\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Alglab2.dir/main.cpp.obj"
+CMakeFiles\AlgLab2.dir\main.cpp.obj: CMakeFiles\AlgLab2.dir\flags.make
+CMakeFiles\AlgLab2.dir\main.cpp.obj: ..\main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\sasha\CLionProjects\AlgLab2\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/AlgLab2.dir/main.cpp.obj"
 	C:\PROGRA~2\MICROS~2\2019\COMMUN~1\VC\Tools\MSVC\1427~1.291\bin\Hostx86\x86\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoCMakeFiles\Alglab2.dir\main.cpp.obj /FdCMakeFiles\Alglab2.dir\ /FS -c C:\Users\sasha\CLionProjects\AlgLab2\main.cpp
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoCMakeFiles\AlgLab2.dir\main.cpp.obj /FdCMakeFiles\AlgLab2.dir\ /FS -c C:\Users\sasha\CLionProjects\AlgLab2\main.cpp
 <<
 
-CMakeFiles\Alglab2.dir\main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Alglab2.dir/main.cpp.i"
-	C:\PROGRA~2\MICROS~2\2019\COMMUN~1\VC\Tools\MSVC\1427~1.291\bin\Hostx86\x86\cl.exe > CMakeFiles\Alglab2.dir\main.cpp.i @<<
+CMakeFiles\AlgLab2.dir\main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/AlgLab2.dir/main.cpp.i"
+	C:\PROGRA~2\MICROS~2\2019\COMMUN~1\VC\Tools\MSVC\1427~1.291\bin\Hostx86\x86\cl.exe > CMakeFiles\AlgLab2.dir\main.cpp.i @<<
  /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\sasha\CLionProjects\AlgLab2\main.cpp
 <<
 
-CMakeFiles\Alglab2.dir\main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Alglab2.dir/main.cpp.s"
+CMakeFiles\AlgLab2.dir\main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/AlgLab2.dir/main.cpp.s"
 	C:\PROGRA~2\MICROS~2\2019\COMMUN~1\VC\Tools\MSVC\1427~1.291\bin\Hostx86\x86\cl.exe @<<
- /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\Alglab2.dir\main.cpp.s /c C:\Users\sasha\CLionProjects\AlgLab2\main.cpp
+ /nologo /TP $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) /FoNUL /FAs /FaCMakeFiles\AlgLab2.dir\main.cpp.s /c C:\Users\sasha\CLionProjects\AlgLab2\main.cpp
 <<
 
-# Object files for target Alglab2
-Alglab2_OBJECTS = \
-"CMakeFiles\Alglab2.dir\main.cpp.obj"
+# Object files for target AlgLab2
+AlgLab2_OBJECTS = \
+"CMakeFiles\AlgLab2.dir\main.cpp.obj"
 
-# External object files for target Alglab2
-Alglab2_EXTERNAL_OBJECTS =
+# External object files for target AlgLab2
+AlgLab2_EXTERNAL_OBJECTS =
 
-Alglab2.exe: CMakeFiles\Alglab2.dir\main.cpp.obj
-Alglab2.exe: CMakeFiles\Alglab2.dir\build.make
-Alglab2.exe: CMakeFiles\Alglab2.dir\objects1.rsp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:\Users\sasha\CLionProjects\AlgLab2\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable Alglab2.exe"
-	"C:\Program Files\JetBrains\CLion 2021.1.2\bin\cmake\win\bin\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\Alglab2.dir --rc=C:\PROGRA~2\WI3CF2~1\10\bin\100183~1.0\x86\rc.exe --mt=C:\PROGRA~2\WI3CF2~1\10\bin\100183~1.0\x86\mt.exe --manifests -- C:\PROGRA~2\MICROS~2\2019\COMMUN~1\VC\Tools\MSVC\1427~1.291\bin\Hostx86\x86\link.exe /nologo @CMakeFiles\Alglab2.dir\objects1.rsp @<<
- /out:Alglab2.exe /implib:Alglab2.lib /pdb:C:\Users\sasha\CLionProjects\AlgLab2\cmake-build-debug\Alglab2.pdb /version:0.0 /machine:X86 /debug /INCREMENTAL /subsystem:console  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib 
+AlgLab2.exe: CMakeFiles\AlgLab2.dir\main.cpp.obj
+AlgLab2.exe: CMakeFiles\AlgLab2.dir\build.make
+AlgLab2.exe: lib\gtest.lib
+AlgLab2.exe: lib\gtest_main.lib
+AlgLab2.exe: lib\gtest.lib
+AlgLab2.exe: CMakeFiles\AlgLab2.dir\objects1.rsp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:\Users\sasha\CLionProjects\AlgLab2\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable AlgLab2.exe"
+	"C:\Program Files\JetBrains\CLion 2021.1.2\bin\cmake\win\bin\cmake.exe" -E vs_link_exe --intdir=CMakeFiles\AlgLab2.dir --rc=C:\PROGRA~2\WI3CF2~1\10\bin\100183~1.0\x86\rc.exe --mt=C:\PROGRA~2\WI3CF2~1\10\bin\100183~1.0\x86\mt.exe --manifests -- C:\PROGRA~2\MICROS~2\2019\COMMUN~1\VC\Tools\MSVC\1427~1.291\bin\Hostx86\x86\link.exe /nologo @CMakeFiles\AlgLab2.dir\objects1.rsp @<<
+ /out:AlgLab2.exe /implib:AlgLab2.lib /pdb:C:\Users\sasha\CLionProjects\AlgLab2\cmake-build-debug\AlgLab2.pdb /version:0.0 /machine:X86 /debug /INCREMENTAL /subsystem:console  lib\gtest.lib lib\gtest_main.lib lib\gtest.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib 
 <<
 
 # Rule to build all files generated by this target.
-CMakeFiles\Alglab2.dir\build: Alglab2.exe
+CMakeFiles\AlgLab2.dir\build: AlgLab2.exe
 
-.PHONY : CMakeFiles\Alglab2.dir\build
+.PHONY : CMakeFiles\AlgLab2.dir\build
 
-CMakeFiles\Alglab2.dir\clean:
-	$(CMAKE_COMMAND) -P CMakeFiles\Alglab2.dir\cmake_clean.cmake
-.PHONY : CMakeFiles\Alglab2.dir\clean
+CMakeFiles\AlgLab2.dir\clean:
+	$(CMAKE_COMMAND) -P CMakeFiles\AlgLab2.dir\cmake_clean.cmake
+.PHONY : CMakeFiles\AlgLab2.dir\clean
 
-CMakeFiles\Alglab2.dir\depend:
+CMakeFiles\AlgLab2.dir\depend:
 	$(CMAKE_COMMAND) -E cmake_depends "NMake Makefiles" C:\Users\sasha\CLionProjects\AlgLab2 C:\Users\sasha\CLionProjects\AlgLab2 C:\Users\sasha\CLionProjects\AlgLab2\cmake-build-debug C:\Users\sasha\CLionProjects\AlgLab2\cmake-build-debug C:\Users\sasha\CLionProjects\AlgLab2\cmake-build-debug\CMakeFiles\Alglab2.dir\DependInfo.cmake --color=$(COLOR)
-.PHONY : CMakeFiles\Alglab2.dir\depend
+.PHONY : CMakeFiles\AlgLab2.dir\depend
 
