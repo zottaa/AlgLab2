@@ -15,6 +15,103 @@ private:
     Node *root{};
     int _size;
 
+    void showHelper(Node *t) {
+        if (t == nullptr)
+            return;
+        showHelper(t->left);
+        std::cout << t->key << " " << t->value << std::endl;
+        showHelper(t->right);
+    }
+
+    T &searchHelper(Node *t, K key) {
+        if (t == nullptr)
+            throw std::exception();
+        if (t->key == key)
+            return t->value;
+        if (key < t->key) {
+            return searchHelper(t->left, key);
+        } else {
+            return searchHelper(t->right, key);
+        }
+    }
+
+    bool addHelper(Node *current, K key, T value) {
+        if (current->key == key)
+            return false;
+        if (current->key > key) {
+            if (current->left == nullptr) {
+                current->left = new Node(Node(key, value));
+                _size++;
+                return true;
+            } else {
+                return addHelper(current->left, key, value);
+            }
+        } else {
+            if (current->right == nullptr) {
+                current->right = new Node(Node(key, value));
+                _size++;
+                return true;
+            } else {
+                return addHelper(current->right, key, value);
+            }
+        }
+    }
+
+    Node *findMin(Node *current) {
+        if (current->left == nullptr)
+            return current;
+        return findMin(current->left);
+    }
+
+    bool deleteHelper(Node *current, K key, Node *prev = nullptr) {
+        if (current == nullptr)
+            return false;
+        if (current->key > key) {
+            return deleteHelper(current->left, key, current);
+        } else if (current->key < key) {
+            return deleteHelper(current->right, key, current);
+        } else {
+            if (current->left == nullptr || current->right == nullptr) {
+                Node *newNode = nullptr;
+                if (current->left == nullptr) {
+                    newNode = current->right;
+                } else {
+                    newNode = current->left;
+                }
+                if (prev != nullptr) {
+                    if (prev->left == current) {
+                        prev->left = newNode;
+                    } else {
+                        prev->right = newNode;
+                    }
+                } else {
+                    root = newNode;
+                }
+                _size--;
+                delete current;
+                return true;
+            } else {
+                Node *temp = findMin(current->right);
+                if (current->left != temp)
+                    temp->left = current->left;
+                if (current->right != temp)
+                    temp->right = current->right;
+                if (prev != nullptr) {
+                    if (prev->left == current) {
+                        prev->left = temp;
+                    } else {
+                        prev->right = temp;
+                    }
+                } else {
+                    root = temp;
+                }
+                delete current;
+                _size--;
+                return true;
+            }
+        }
+    }
+
 public:
     struct Node {
         Node *left;
@@ -40,8 +137,15 @@ public:
         _size = 0;
     }
 
-    ~BinarySearchTree() {
-        delete root;
+    BinarySearchTree(const BinarySearchTree &otherTree) { //TODO
+
+    }
+
+    ~BinarySearchTree() { //TODO
+    }
+
+    T &recursiveSearch(K key) {
+        return searchHelper(root, key);
     }
 
     T &search(K key) {
@@ -53,12 +157,19 @@ public:
                 temp = temp->right;
             }
         }
-        try {
-            if (temp == nullptr)
-                throw std::exception();
-            return temp->value;
-        } catch (std::exception& e) {
-            std::cout << "Exception!\n";
+        if (temp == nullptr)
+            throw std::exception();
+        return temp->value;
+
+    }
+
+    bool recursiveAdd(K key, T value) {
+        if (root == nullptr) {
+            root = new Node(Node(key, value));
+            _size++;
+            return true;
+        } else {
+            return addHelper(root, key, value);
         }
     }
 
@@ -95,7 +206,9 @@ public:
     }
 
     void clear() {
-
+        while(_size != 0) {
+            recursiveDeleteByKey(root->key);
+        }
     }
 
     bool isEmpty() {
@@ -105,60 +218,84 @@ public:
             return false;
     }
 
-    bool deleteByKey(K keyOfDeletable) { //fix
-        Node *temp = root;
-        Node *prev = nullptr;
-        while (temp != nullptr && temp->key != keyOfDeletable) {
-            prev = temp;
-            keyOfDeletable < temp->key ? temp = temp->left : temp = temp->right;
+    bool recursiveDeleteByKey(K keyOfDeletable) {
+        if (root == nullptr)
+            return false;
+        return deleteHelper(root, keyOfDeletable);
+    }
+
+    void recursiveShow() {
+        showHelper(root);
+        std::cout << std::endl;
+    }
+
+    bool deleteByKey(K keyOfDeletable) {
+        Node *current = root;
+        Node *previous = nullptr;
+        while (current != nullptr && current->key != keyOfDeletable) {
+            previous = current;
+            keyOfDeletable < current->key ?
+                    current = current->left
+                                          :
+                    current = current->right;
         }
-        if (temp == nullptr)
+        if (current == nullptr)
             return false;
 
-        Node *x = nullptr;
-        Node *y = nullptr;
-        if (temp->left == nullptr && temp->right == nullptr) {
-        } else if (temp->left == nullptr) {
-            x = temp->right;
-        } else if (temp->right == nullptr) {
-            x = temp->left;
-        } else {
-            prev = temp;
-            y = temp->right;
-            while(y->left != nullptr) {
-                prev = y;
-                y = y->left;
-            }
-            temp->key = y->key;
-            temp->value = y->value;
-            x = y->right;
-            temp = y;
-        }
-        if (prev == nullptr) {
-            root = x;
-        } else {
-            if (temp->key < prev->key) {
-                prev->left = x;
+        if (current->left == nullptr || current->right == nullptr) {
+            Node *newNode = nullptr;
+            if (current->left == nullptr) {
+                newNode = current->right;
             } else {
-                temp->right = x;
+                newNode = current->left;
             }
+            if (previous == nullptr) {
+                delete root;
+                root = newNode;
+                _size--;
+                return true;
+            }
+            if (current == previous->left)
+                previous->left = newNode;
+            else
+                previous->right = newNode;
+            delete current;
+            _size--;
+            return true;
+        } else {
+            previous = nullptr;
+            Node *temp = current->right;
+
+            while (temp->left != nullptr) {
+                previous = temp;
+                temp = temp->left;
+            }
+
+            if (previous != nullptr) {
+                previous->left = temp->right;
+            } else {
+                current->right = temp->right;
+            }
+            current->value = temp->value;
+            delete temp;
+            _size--;
+            return true;
         }
-        delete temp;
-        _size--;
-        return true;
     }
 
     void show() {
-        std::stack<Node *> stack;
-        stack.push(root);
-        while (!stack.empty()) {
-            Node *temp = stack.top();
-            stack.pop();
-            std::cout << temp->key << " " << temp->value << std::endl;
-            if (temp->right != nullptr)
-                stack.push(temp->right);
-            if (temp->left != nullptr)
-                stack.push(temp->left);
+        if (root != nullptr) {
+            std::stack<Node *> stack;
+            stack.push(root);
+            while (!stack.empty()) {
+                Node *temp = stack.top();
+                stack.pop();
+                std::cout << temp->key << " " << temp->value << std::endl;
+                if (temp->right != nullptr)
+                    stack.push(temp->right);
+                if (temp->left != nullptr)
+                    stack.push(temp->left);
+            }
         }
     }
 

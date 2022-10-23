@@ -3,18 +3,30 @@
 
 
 int main() {
-    BinarySearchTree<int, int> tree(10, 1);
-    tree.add(5, 1);
-    tree.add(20, 1);
-    tree.add(30, 1);
-    tree.add(100, 1);
-    tree.add(2, 1);
-    tree.add(33, 1);
-    tree.add(25, 1);
-    tree.add(3, 1);
+    BinarySearchTree<int, int> tree;
+    tree.recursiveAdd(10, 1);
+    tree.recursiveAdd(7, 1);
+    tree.recursiveAdd(5, 1);
+    tree.recursiveAdd(8, 1);
+    tree.recursiveAdd(15, 1);
+    tree.recursiveAdd(11, 1);
+    tree.recursiveAdd(18, 1);
+    tree.recursiveShow();
+    tree.recursiveDeleteByKey(11);
+    tree.recursiveShow();
+    tree.recursiveDeleteByKey(15);
+    tree.recursiveShow();
+    tree.recursiveDeleteByKey(10);
+    tree.recursiveDeleteByKey(7);
+    tree.recursiveAdd(55, 1);
+    tree.recursiveShow();
+    try {
+        std::cout << tree.recursiveSearch(20) << std::endl;
+    } catch (std::exception&) {
+        std::cout << "Exception!\n";
+    }
+    tree.clear();
     tree.show();
-    std::cout << "\n\n";
-    tree.deleteByKey(30);
+    tree.add(10, 1);
     tree.show();
-
 }
