@@ -1,4 +1,8 @@
-"C:\Program Files\JetBrains\CLion 2021.1.2\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - NMake Makefiles" C:\Users\sasha\CLionProjects\AlgLab2
+"C:\Program Files\JetBrains\CLion 2021.2.2\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "CodeBlocks - NMake Makefiles" C:\Users\sasha\CLionProjects\Alglab2
+-- Found Python: C:/Program Files (x86)/Microsoft Visual Studio/Shared/Python37_64/python.exe (found version "3.7.8") found components: Interpreter 
+-- Looking for pthread.h
+-- Looking for pthread.h - not found
+-- Found Threads: TRUE  
 -- Configuring done
 -- Generating done
 -- Build files have been written to: C:/Users/sasha/CLionProjects/AlgLab2/cmake-build-debug

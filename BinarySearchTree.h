@@ -36,23 +36,53 @@ private:
         }
     }
 
-    bool addHelper(Node *current, K key, T value) {
+    void addBackN(Node *current, K key) {
         if (current->key == key)
-            return false;
+            return;
         if (current->key > key) {
             if (current->left == nullptr) {
+                current->n -= 1;
+                _size++;
+                return;
+            } else {
+                current->n -= 1;
+                return addBackN(current->left, key);
+            }
+        } else {
+            if (current->right == nullptr) {
+                current->n -= 1;
+                _size++;
+                return;
+            } else {
+                current->n -= 1;
+                return addBackN(current->right, key);
+            }
+        }
+    }
+
+    bool addHelper(Node *current, K key, T value) {
+        if (current->key == key) {
+            addBackN(root, key);
+            return false;
+        }
+        if (current->key > key) {
+            if (current->left == nullptr) {
+                current->n += 1;
                 current->left = new Node(Node(key, value));
                 _size++;
                 return true;
             } else {
+                current->n += 1;
                 return addHelper(current->left, key, value);
             }
         } else {
             if (current->right == nullptr) {
+                current->n += 1;
                 current->right = new Node(Node(key, value));
                 _size++;
                 return true;
             } else {
+                current->n += 1;
                 return addHelper(current->right, key, value);
             }
         }
@@ -64,12 +94,29 @@ private:
         return findMin(current->left);
     }
 
-    bool deleteHelper(Node *current, K key, Node *prev = nullptr) {
-        if (current == nullptr)
-            return false;
+    void deleteBackN(Node *current, K key, Node *prev = nullptr) {
+        if (current == nullptr) {
+            return;
+        }
         if (current->key > key) {
+            current->n += 1;
+            return deleteBackN(current->left, key, current);
+        } else if (current->key < key) {
+            current->n += 1;
+            return deleteBackN(current->right, key, current);
+        }
+    }
+
+    bool deleteHelper(Node *current, K key, Node *prev = nullptr) { //TODO (n reduce)
+        if (current == nullptr) {
+            deleteBackN(root, key);
+            return false;
+        }
+        if (current->key > key) {
+            current->n -= 1;
             return deleteHelper(current->left, key, current);
         } else if (current->key < key) {
+            current->n -= 1;
             return deleteHelper(current->right, key, current);
         } else {
             if (current->left == nullptr || current->right == nullptr) {
@@ -86,6 +133,7 @@ private:
                         prev->right = newNode;
                     }
                 } else {
+                    newNode->n = (root->n) - 1;
                     root = newNode;
                 }
                 _size--;
@@ -104,6 +152,7 @@ private:
                         prev->right = temp;
                     }
                 } else {
+                    temp->n = (root->n) - 1;
                     root = temp;
                 }
                 delete current;
@@ -113,18 +162,32 @@ private:
         }
     }
 
+    void verticalShowHelper(Node *current, int level = 1) {
+        if (current == nullptr)
+            return;
+        verticalShowHelper(current->right, level + 1);
+        for (int i = 0; i != level * 3; ++i) {
+            std::cout << " ";
+        }
+        std::cout << current->key << " " << current->n;
+        std::cout << "\n";
+        verticalShowHelper(current->left, level + 1);
+    }
+
 public:
     struct Node {
         Node *left;
         Node *right;
         K key;
         T value;
+        int n;
 
-        Node(K key, T value) {
+        Node(K key, T value, int _n = 1) {
             this->left = nullptr;
             this->right = nullptr;
             this->key = key;
             this->value = value;
+            n = _n;
         }
     };
 
@@ -146,26 +209,11 @@ public:
         this->clear();
     }
 
-    T &recursiveSearch(K key) {
+    T &search(K key) {
         return searchHelper(root, key);
     }
 
-    T &search(K key) {
-        Node *temp = root;
-        while (temp != nullptr && key != temp->key) {
-            if (key < temp->key) {
-                temp = temp->left;
-            } else {
-                temp = temp->right;
-            }
-        }
-        if (temp == nullptr)
-            throw std::exception();
-        return temp->value;
-
-    }
-
-    bool recursiveAdd(K key, T value) {
+    bool add(K key, T value) {
         if (root == nullptr) {
             root = new Node(Node(key, value));
             _size++;
@@ -175,41 +223,13 @@ public:
         }
     }
 
-    bool add(K key, T value) {
-        if (root == nullptr) {
-            root = new Node(Node(key, value));
-            _size++;
-            return true;
-        }
-        Node *temp = root;
-        Node *prev = nullptr;
-        while (temp != nullptr) {
-            prev = temp;
-            if (key == temp->key) {
-                return false;
-            }
-            if (key < temp->key) {
-                temp = temp->left;
-            } else {
-                temp = temp->right;
-            }
-        }
-        if (key < prev->key) {
-            prev->left = new Node(Node(key, value));
-        } else {
-            prev->right = new Node(Node(key, value));
-        }
-        _size++;
-        return true;
-    }
-
     int &size() {
         return this->_size;
     }
 
     void clear() {
-        while(_size != 0) {
-            recursiveDeleteByKey(root->key);
+        while (_size != 0) {
+            deleteByKey(root->key);
         }
     }
 
@@ -220,94 +240,29 @@ public:
             return false;
     }
 
-    bool recursiveDeleteByKey(K keyOfDeletable) {
+    bool deleteByKey(K keyOfDeletable) {
         if (root == nullptr)
             return false;
         return deleteHelper(root, keyOfDeletable);
     }
 
-    void recursiveShow() {
+    void show() {
         showHelper(root);
         std::cout << std::endl;
     }
 
-    bool deleteByKey(K keyOfDeletable) {
-        Node *current = root;
-        Node *previous = nullptr;
-        while (current != nullptr && current->key != keyOfDeletable) {
-            previous = current;
-            keyOfDeletable < current->key ?
-                    current = current->left
-                                          :
-                    current = current->right;
-        }
-        if (current == nullptr)
-            return false;
-
-        if (current->left == nullptr || current->right == nullptr) {
-            Node *newNode = nullptr;
-            if (current->left == nullptr) {
-                newNode = current->right;
-            } else {
-                newNode = current->left;
-            }
-            if (previous == nullptr) {
-                delete root;
-                root = newNode;
-                _size--;
-                return true;
-            }
-            if (current == previous->left)
-                previous->left = newNode;
-            else
-                previous->right = newNode;
-            delete current;
-            _size--;
-            return true;
-        } else {
-            previous = nullptr;
-            Node *temp = current->right;
-
-            while (temp->left != nullptr) {
-                previous = temp;
-                temp = temp->left;
-            }
-
-            if (previous != nullptr) {
-                previous->left = temp->right;
-            } else {
-                current->right = temp->right;
-            }
-            current->value = temp->value;
-            delete temp;
-            _size--;
-            return true;
-        }
+    int findNumber(K key) { //TODO
+        if (root == nullptr)
+            throw std::exception();
     }
 
-    void show() {
-        if (root != nullptr) {
-            std::stack<Node *> stack;
-            stack.push(root);
-            while (!stack.empty()) {
-                Node *temp = stack.top();
-                stack.pop();
-                std::cout << temp->key << " " << temp->value << std::endl;
-                if (temp->right != nullptr)
-                    stack.push(temp->right);
-                if (temp->left != nullptr)
-                    stack.push(temp->left);
-            }
-        }
-    }
-
-    int numberOfKeysBiggerThen(K key) {
-
+    void verticalShow() {
+        verticalShowHelper(root);
     }
 
     std::string toString() {
-        std::string str ;
-        Node* temp = root;
+        std::string str;
+        Node *temp = root;
         if (temp != nullptr) {
             std::stack<Node *> stack;
             while (!stack.empty() || temp != nullptr) {
@@ -317,6 +272,26 @@ public:
                 } else {
                     temp = stack.top();
                     str += std::to_string(temp->key);
+                    stack.pop();
+                    temp = temp->right;
+                }
+            }
+        }
+        return str;
+    }
+
+    std::string toStringN() {
+        std::string str;
+        Node *temp = root;
+        if (temp != nullptr) {
+            std::stack<Node *> stack;
+            while (!stack.empty() || temp != nullptr) {
+                if (temp != nullptr) {
+                    stack.push(temp);
+                    temp = temp->left;
+                } else {
+                    temp = stack.top();
+                    str += std::to_string(temp->n);
                     stack.pop();
                     temp = temp->right;
                 }

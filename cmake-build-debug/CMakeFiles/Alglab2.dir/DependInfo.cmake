@@ -1,10 +1,14 @@
+
+# Consider dependencies only in project.
+set(CMAKE_DEPENDS_IN_PROJECT_ONLY OFF)
+
 # The set of languages for which implicit dependencies are needed:
 set(CMAKE_DEPENDS_LANGUAGES
   "CXX"
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "C:/Users/sasha/CLionProjects/AlgLab2/main.cpp" "C:/Users/sasha/CLionProjects/AlgLab2/cmake-build-debug/CMakeFiles/Alglab2.dir/main.cpp.obj"
+  "C:/Users/sasha/CLionProjects/AlgLab2/main.cpp" "C:/Users/sasha/CLionProjects/AlgLab2/cmake-build-debug/CMakeFiles/AlgLab2.dir/main.cpp.obj"
   )
 set(CMAKE_CXX_COMPILER_ID "MSVC")
 
@@ -12,6 +16,10 @@ set(CMAKE_CXX_COMPILER_ID "MSVC")
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "../lib/googletest/googletest/include"
   "../lib/googletest/googletest"
+  )
+
+# The set of dependency files which are needed:
+set(CMAKE_DEPENDS_DEPENDENCY_FILES
   )
 
 # Targets to which this target links.
