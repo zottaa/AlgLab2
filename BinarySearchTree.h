@@ -94,6 +94,12 @@ private:
         return findMin(current->left);
     }
 
+    Node *findMax(Node *current) {
+        if (current->right == nullptr)
+            return current;
+        return findMax(current->right);
+    }
+
     void deleteBackN(Node *current, K key, Node *prev = nullptr) {
         if (current == nullptr) {
             return;
@@ -107,7 +113,7 @@ private:
         }
     }
 
-    bool deleteHelper(Node *current, K key, Node *prev = nullptr) { //TODO (n reduce)
+    bool deleteHelper(Node *current, K key, Node *prev = nullptr) {// TODO left != nullptr and right != nullptr case, maybe alter fun min
         if (current == nullptr) {
             deleteBackN(root, key);
             return false;
@@ -133,7 +139,8 @@ private:
                         prev->right = newNode;
                     }
                 } else {
-                    newNode->n = (root->n) - 1;
+                    if (newNode != nullptr)
+                        newNode->n = (root->n) - 1;
                     root = newNode;
                 }
                 _size--;
@@ -251,9 +258,32 @@ public:
         std::cout << std::endl;
     }
 
-    int findNumber(K key) { //TODO
+    int findIndex(K key) {
         if (root == nullptr)
-            throw std::exception();
+            return -1;
+        Node *searchNode = root;
+        int indexNode = 0;
+        if (searchNode->left != nullptr)
+            indexNode = searchNode->left->n;
+        while (key != searchNode->key) {
+            if (key > searchNode->key) {
+                searchNode = searchNode->right;
+                if (searchNode == nullptr)
+                    return -1;
+                if (searchNode->left != nullptr)
+                    indexNode += searchNode->left->n;
+                indexNode += 1;
+
+            } else {
+                searchNode = searchNode->left;
+                if (searchNode == nullptr)
+                    return -1;
+                if (searchNode->right != nullptr)
+                    indexNode -= searchNode->right->n;
+                indexNode -= 1;
+            }
+        }
+        return indexNode;
     }
 
     void verticalShow() {

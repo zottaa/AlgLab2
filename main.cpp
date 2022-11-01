@@ -18,7 +18,6 @@ TEST(TreeTest, AddTest) {
     tree.add(10, 1);
     tree.add(10, 1);
     tree.add(10, 1);
-    tree.verticalShow();
     ASSERT_EQ(tree.toString(), "12346781012");
 }
 
@@ -84,11 +83,9 @@ TEST(TreeTest, DeleteReduceNTest) {
     tree.deleteByKey(1);
     tree.deleteByKey(1);
     tree.deleteByKey(1);
-    tree.verticalShow();
-    //tree.deleteByKey(8);
-    std::cout << "\n\n\n";
-    //tree.verticalShow();
-    ASSERT_EQ(tree.toStringN(), "215216");
+    tree.deleteByKey(8);
+    tree.deleteByKey(10);
+    ASSERT_EQ(tree.toStringN(), "21521");
 }
 
 TEST(TreeTest, DeleteTest) {
@@ -121,7 +118,7 @@ TEST(TreeTest, ClearTest) {
     tree.add(1, 1);
     ASSERT_EQ(tree.toString(), "123467810");
     tree.clear();
-    ASSERT_EQ(tree.toString(),"");
+    ASSERT_EQ(tree.toString(), "");
 }
 
 TEST(TreeTest, SearchTest) {
@@ -134,7 +131,30 @@ TEST(TreeTest, SearchTest) {
     tree.add(6, 1);
     tree.add(7, 1);
     tree.add(1, 1);
+    tree.add(9, 1);
     ASSERT_EQ(tree.search(10), 1);
     ASSERT_EQ(tree.search(1), 1);
     ASSERT_ANY_THROW(tree.search(33));
+}
+
+TEST(TreeTest, SearchIndexTest) {
+    BinarySearchTree<int, int> tree;
+    tree.add(8, 1);
+    tree.add(4, 1);
+    tree.add(2, 1);
+    tree.add(3, 1);
+    tree.add(10, 1);
+    tree.add(6, 1);
+    tree.add(7, 1);
+    tree.add(1, 1);
+    tree.add(9, 1);
+    std::cout << tree.findIndex(1) << std::endl;
+    std::cout << tree.findIndex(2) << std::endl;
+    std::cout << tree.findIndex(3) << std::endl;
+    std::cout << tree.findIndex(4) << std::endl;
+    std::cout << tree.findIndex(6) << std::endl;
+    std::cout << tree.findIndex(7) << std::endl;
+    std::cout << tree.findIndex(8) << std::endl;
+    std::cout << tree.findIndex(9) << std::endl;
+    std::cout << tree.findIndex(10) << std::endl;
 }
