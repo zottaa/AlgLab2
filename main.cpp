@@ -143,18 +143,46 @@ TEST(TreeTest, SearchIndexTest) {
     tree.add(4, 1);
     tree.add(2, 1);
     tree.add(3, 1);
+    tree.add(11, 1);
     tree.add(10, 1);
+    tree.add(12, 1);
     tree.add(6, 1);
     tree.add(7, 1);
     tree.add(1, 1);
     tree.add(9, 1);
-    std::cout << tree.findIndex(1) << std::endl;
-    std::cout << tree.findIndex(2) << std::endl;
-    std::cout << tree.findIndex(3) << std::endl;
-    std::cout << tree.findIndex(4) << std::endl;
-    std::cout << tree.findIndex(6) << std::endl;
-    std::cout << tree.findIndex(7) << std::endl;
-    std::cout << tree.findIndex(8) << std::endl;
-    std::cout << tree.findIndex(9) << std::endl;
-    std::cout << tree.findIndex(10) << std::endl;
+    tree.deleteByKey(11);
+    tree.deleteByKey(2);
+    ASSERT_EQ(tree.findIndex(4), 2);
+    tree.deleteByKey(4);
+    ASSERT_EQ(tree.findIndex(1), 0);
+    ASSERT_EQ(tree.findIndex(8), 4);
+    ASSERT_EQ(tree.findIndex(4), -1);
+}
+
+TEST(TreeTest, CopyTest) {
+    BinarySearchTree<int, int> tree;
+    tree.add(8, 1);
+    tree.add(4, 1);
+    tree.add(2, 1);
+    tree.add(3, 1);
+    tree.add(10, 1);
+    tree.add(12, 1);
+    tree.add(6, 1);
+    tree.add(7, 1);
+    tree.add(1, 1);
+    tree.add(10, 1);
+    tree.add(10, 1);
+    tree.add(10, 1);
+    tree.add(10, 1);
+    tree.add(10, 1);
+    BinarySearchTree<int, int> tree2(tree);
+    ASSERT_EQ(tree2.toString(), "12346781012");
+}
+
+TEST(TreeTest, IteratorTest) {
+
+}
+
+TEST(TreeTest, ReverseIteratorTest) {
+
 }

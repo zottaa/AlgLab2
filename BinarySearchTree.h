@@ -41,20 +41,20 @@ private:
             return;
         if (current->key > key) {
             if (current->left == nullptr) {
-                current->n -= 1;
+                current->weight -= 1;
                 _size++;
                 return;
             } else {
-                current->n -= 1;
+                current->weight -= 1;
                 return addBackN(current->left, key);
             }
         } else {
             if (current->right == nullptr) {
-                current->n -= 1;
+                current->weight -= 1;
                 _size++;
                 return;
             } else {
-                current->n -= 1;
+                current->weight -= 1;
                 return addBackN(current->right, key);
             }
         }
@@ -67,31 +67,37 @@ private:
         }
         if (current->key > key) {
             if (current->left == nullptr) {
-                current->n += 1;
+                current->weight += 1;
                 current->left = new Node(Node(key, value));
                 _size++;
                 return true;
             } else {
-                current->n += 1;
+                current->weight += 1;
                 return addHelper(current->left, key, value);
             }
         } else {
             if (current->right == nullptr) {
-                current->n += 1;
+                current->weight += 1;
                 current->right = new Node(Node(key, value));
                 _size++;
                 return true;
             } else {
-                current->n += 1;
+                current->weight += 1;
                 return addHelper(current->right, key, value);
             }
         }
     }
 
-    Node *findMin(Node *current) {
-        if (current->left == nullptr)
+    Node *findMin(Node *current, Node *prev, Node *deletable) {
+        current->weight -= 1;
+        if (current->left == nullptr) {
+            if (current->right != nullptr && prev != deletable)
+                prev->left = current->right;
+            else if (prev != deletable)
+                prev->left = nullptr;
             return current;
-        return findMin(current->left);
+        }
+        return findMin(current->left, current, deletable);
     }
 
     Node *findMax(Node *current) {
@@ -105,24 +111,24 @@ private:
             return;
         }
         if (current->key > key) {
-            current->n += 1;
+            current->weight += 1;
             return deleteBackN(current->left, key, current);
         } else if (current->key < key) {
-            current->n += 1;
+            current->weight += 1;
             return deleteBackN(current->right, key, current);
         }
     }
 
-    bool deleteHelper(Node *current, K key, Node *prev = nullptr) {// TODO left != nullptr and right != nullptr case, maybe alter fun min
+    bool deleteHelper(Node *current, K key, Node *prev = nullptr) {
         if (current == nullptr) {
             deleteBackN(root, key);
             return false;
         }
         if (current->key > key) {
-            current->n -= 1;
+            current->weight -= 1;
             return deleteHelper(current->left, key, current);
         } else if (current->key < key) {
-            current->n -= 1;
+            current->weight -= 1;
             return deleteHelper(current->right, key, current);
         } else {
             if (current->left == nullptr || current->right == nullptr) {
@@ -140,26 +146,32 @@ private:
                     }
                 } else {
                     if (newNode != nullptr)
-                        newNode->n = (root->n) - 1;
+                        newNode->weight = (root->weight) - 1;
                     root = newNode;
                 }
                 _size--;
                 delete current;
                 return true;
             } else {
-                Node *temp = findMin(current->right);
-                if (current->left != temp)
+                Node *temp = findMin(current->right, current, current);
+                if (current->left != temp) {
                     temp->left = current->left;
-                if (current->right != temp)
+                    if (current->right != temp)
+                        temp->right = current->right;
+                } else {
                     temp->right = current->right;
+                    if (current->left != temp)
+                        temp->left = current->left;
+                }
                 if (prev != nullptr) {
+                    temp->weight = current->weight - 1;
                     if (prev->left == current) {
                         prev->left = temp;
                     } else {
                         prev->right = temp;
                     }
                 } else {
-                    temp->n = (root->n) - 1;
+                    temp->weight = (root->weight) - 1;
                     root = temp;
                 }
                 delete current;
@@ -176,9 +188,17 @@ private:
         for (int i = 0; i != level * 3; ++i) {
             std::cout << " ";
         }
-        std::cout << current->key << " " << current->n;
+        std::cout << current->key << " " << current->weight;
         std::cout << "\n";
         verticalShowHelper(current->left, level + 1);
+    }
+
+    void copyTree(Node *current) {
+        if (current == nullptr)
+            return;
+        add(current->key, current->value);
+        copyTree(current->left);
+        copyTree(current->right);
     }
 
 public:
@@ -187,14 +207,14 @@ public:
         Node *right;
         K key;
         T value;
-        int n;
+        int weight;
 
-        Node(K key, T value, int _n = 1) {
+        Node(K key, T value, int _weight = 1) {
             this->left = nullptr;
             this->right = nullptr;
             this->key = key;
             this->value = value;
-            n = _n;
+            weight = _weight;
         }
     };
 
@@ -208,8 +228,10 @@ public:
         _size = 0;
     }
 
-    BinarySearchTree(const BinarySearchTree &otherTree) { //TODO
-
+    BinarySearchTree(const BinarySearchTree &otherTree) {
+        _size = 0;
+        root = nullptr;
+        copyTree(otherTree.root);
     }
 
     ~BinarySearchTree() {
@@ -264,14 +286,14 @@ public:
         Node *searchNode = root;
         int indexNode = 0;
         if (searchNode->left != nullptr)
-            indexNode = searchNode->left->n;
+            indexNode = searchNode->left->weight;
         while (key != searchNode->key) {
             if (key > searchNode->key) {
                 searchNode = searchNode->right;
                 if (searchNode == nullptr)
                     return -1;
                 if (searchNode->left != nullptr)
-                    indexNode += searchNode->left->n;
+                    indexNode += searchNode->left->weight;
                 indexNode += 1;
 
             } else {
@@ -279,7 +301,7 @@ public:
                 if (searchNode == nullptr)
                     return -1;
                 if (searchNode->right != nullptr)
-                    indexNode -= searchNode->right->n;
+                    indexNode -= searchNode->right->weight;
                 indexNode -= 1;
             }
         }
@@ -321,7 +343,7 @@ public:
                     temp = temp->left;
                 } else {
                     temp = stack.top();
-                    str += std::to_string(temp->n);
+                    str += std::to_string(temp->weight);
                     stack.pop();
                     temp = temp->right;
                 }
