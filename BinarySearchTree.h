@@ -16,6 +16,57 @@ private:
     Node *root{};
     int _size;
 
+    Node *_parent_right(Node *t, Node *x) {
+        if (t == x)
+            return nullptr;
+        if (x->key > t->key) {
+            Node *rp = _parent_right(t->right, x);
+            if (rp != nullptr)
+                return rp;
+            else
+                return t;
+        } else
+            return _parent_right(t->left, x);
+    }
+
+    Node *_getPrev(Node *x) {
+        if (x == nullptr)
+            return nullptr;
+        if (x->left != nullptr) {
+            Node *temp = x->left;
+            while (temp->right != nullptr)
+                temp = temp->right;
+            return temp;
+        } else {
+            return _parent_right(root, x);
+        }
+    }
+
+    Node *_parent_left(Node *t, Node *x) {
+        if (t == x)
+            return nullptr;
+        if (x->key < t->key) {
+            Node *rp = _parent_left(t->left, x);
+            if (rp != nullptr)
+                return rp;
+            else
+                return t;
+        } else
+            return _parent_left(t->right, x);
+    }
+
+    Node *_getNext(Node *x) {
+        if (x == nullptr)
+            return nullptr;
+        if (x->right != nullptr) {
+            Node *temp = x->right;
+            while (temp->left != nullptr)
+                temp = temp->left;
+            return temp;
+        } else
+            return _parent_left(root, x);
+    }
+
     void showHelper(Node *t) {
         if (t == nullptr)
             return;
@@ -88,7 +139,7 @@ private:
         }
     }
 
-    Node *findMin(Node *current, Node *prev, Node *deletable) {
+    Node *findMinDelete(Node *current, Node *prev, Node *deletable) {
         current->weight -= 1;
         if (current->left == nullptr) {
             if (current->right != nullptr && prev != deletable)
@@ -97,7 +148,13 @@ private:
                 prev->left = nullptr;
             return current;
         }
-        return findMin(current->left, current, deletable);
+        return findMinDelete(current->left, current, deletable);
+    }
+
+    Node* findMin(Node *current) {
+        if (current->left == nullptr)
+            return current;
+        return findMin(current->left);
     }
 
     Node *findMax(Node *current) {
@@ -153,7 +210,7 @@ private:
                 delete current;
                 return true;
             } else {
-                Node *temp = findMin(current->right, current, current);
+                Node *temp = findMinDelete(current->right, current, current);
                 if (current->left != temp) {
                     temp->left = current->left;
                     if (current->right != temp)
@@ -264,9 +321,9 @@ public:
 
     bool isEmpty() {
         if (size())
-            return true;
-        else
             return false;
+        else
+            return true;
     }
 
     bool deleteByKey(K keyOfDeletable) {
@@ -357,20 +414,135 @@ public:
     class ReverseIterator;
 
     Iterator begin() {
-
+        return Iterator(this);
     }
 
     Iterator end() {
-
+        return Iterator(this, false);
     }
 
     ReverseIterator rbegin() {
-
+        return ReverseIterator(this);
     }
 
     ReverseIterator rend() {
-
+        return ReverseIterator(this, false);
     }
+
+
+    class Iterator {
+    private:
+        BinarySearchTree<K, T> *tree;
+        Node *current;
+    public:
+        Iterator(BinarySearchTree *_tree, bool isBegin = true) {
+            if (_tree->isEmpty()) {
+                tree = nullptr;
+                current = nullptr;
+            } else {
+                tree = _tree;
+                if (isBegin)
+                    current = tree->findMin(tree->root);
+                else
+                    current = nullptr;
+            }
+        }
+
+        Iterator(const Iterator &iterator) {
+            tree = iterator.tree;
+            current = iterator.current;
+        }
+
+        bool operator==(const Iterator &other) {
+            if (other.tree != this->tree)
+                return false;
+            if (other.current != this->current)
+                return false;
+            return true;
+        }
+
+        bool operator!=(const Iterator &other) {
+            if (other.tree != this->tree)
+                return true;
+            if (other.current != this->current)
+                return true;
+            return false;
+        }
+
+        Iterator &operator--(int) {
+            current = tree->_getPrev(current);
+            return *this;
+        }
+
+        Iterator &operator++(int) {
+            current = tree->_getNext(current);
+            return *this;
+        }
+
+        T &operator*() {
+            if (current != nullptr)
+                return current->value;
+            else
+                throw std::exception();
+        }
+    };
+
+    class ReverseIterator {
+    private:
+        BinarySearchTree<K, T> *tree;
+        Node *current;
+    public:
+        ReverseIterator(BinarySearchTree *_tree, bool isBegin = true) {
+            if (_tree->isEmpty()) {
+                tree = nullptr;
+                current = nullptr;
+            } else {
+                tree = _tree;
+                if (isBegin)
+                    current = tree->findMax(tree->root);
+                else
+                    current = nullptr;
+            }
+        }
+
+        ReverseIterator(const ReverseIterator &iterator) {
+            tree = iterator.tree;
+            current = iterator.current;
+        }
+
+        bool operator==(const ReverseIterator &other) {
+            if (other.tree != this->tree)
+                return false;
+            if (other.current != this->current)
+                return false;
+            return true;
+        }
+
+        bool operator!=(const ReverseIterator &other) {
+            if (other.tree != this->tree)
+                return true;
+            if (other.current != this->current)
+                return true;
+            return false;
+        }
+
+        ReverseIterator &operator--(int) {
+            current = tree->_getNext(current);
+            return *this;
+        }
+
+        ReverseIterator &operator++(int) {
+            current = tree->_getPrev(current);
+            return *this;
+        }
+
+        T &operator*() {
+            if (current != nullptr)
+                return current->value;
+            else
+                throw std::exception();
+        }
+    };
 
 };
 
