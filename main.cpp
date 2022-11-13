@@ -1,9 +1,7 @@
 #include <iostream>
 #include "BinarySearchTree.h"
-
 #include <ctime>
 #include <cmath>
-#include <iostream>
 using namespace std;
 typedef unsigned long long INT_64;
 

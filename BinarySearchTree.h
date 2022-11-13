@@ -5,9 +5,6 @@
 #ifndef ALGLAB2_BINARYSEARCHTREE_H
 #define ALGLAB2_BINARYSEARCHTREE_H
 
-#include <stack>
-#include <string>
-
 template<class K, class T>
 class BinarySearchTree {
 public:
@@ -307,7 +304,7 @@ public:
         return searchHelper(root, key);
     }
 
-    bool add(K key, T value) { //Включение данных с заданным ключем
+    bool add(K key, T value) { //Включение данных с заданным ключом
         if (root == nullptr) {
             count++;
             root = new Node(Node(key, value));
