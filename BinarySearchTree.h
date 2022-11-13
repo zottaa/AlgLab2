@@ -15,8 +15,9 @@ public:
 private:
     Node *root{};
     int _size;
+    int count;
 
-    Node *_parent_right(Node *t, Node *x) {
+    Node *_parent_right(Node *t, Node *x) { //Поиск правого родителя
         if (t == x)
             return nullptr;
         if (x->key > t->key) {
@@ -29,7 +30,7 @@ private:
             return _parent_right(t->left, x);
     }
 
-    Node *_getPrev(Node *x) {
+    Node *_getPrev(Node *x) { //Получение предыдущего элемента
         if (x == nullptr)
             return nullptr;
         if (x->left != nullptr) {
@@ -42,7 +43,7 @@ private:
         }
     }
 
-    Node *_parent_left(Node *t, Node *x) {
+    Node *_parent_left(Node *t, Node *x) { //Поиск левого родителя
         if (t == x)
             return nullptr;
         if (x->key < t->key) {
@@ -55,7 +56,7 @@ private:
             return _parent_left(t->right, x);
     }
 
-    Node *_getNext(Node *x) {
+    Node *_getNext(Node *x) { //Получение следующего элемента
         if (x == nullptr)
             return nullptr;
         if (x->right != nullptr) {
@@ -67,15 +68,16 @@ private:
             return _parent_left(root, x);
     }
 
-    void showHelper(Node *t) {
+    void showHelper(Node *t) { //Метод помощник для реализации обхода
         if (t == nullptr)
             return;
-        showHelper(t->left);
         std::cout << t->key << " " << t->value << std::endl;
+        showHelper(t->left);
         showHelper(t->right);
     }
 
-    T &searchHelper(Node *t, K key) {
+    T &searchHelper(Node *t, K key) { //Метод помощник для реализации поиска
+        count++;
         if (t == nullptr)
             throw std::exception();
         if (t->key == key)
@@ -87,7 +89,7 @@ private:
         }
     }
 
-    void addBackN(Node *current, K key) {
+    void addBackN(Node *current, K key) { //Метод для отмены изменений веса при вставке
         if (current->key == key)
             return;
         if (current->key > key) {
@@ -111,7 +113,8 @@ private:
         }
     }
 
-    bool addHelper(Node *current, K key, T value) {
+    bool addHelper(Node *current, K key, T value) { //Метод помощник для реализации вставки
+        count++;
         if (current->key == key) {
             addBackN(root, key);
             return false;
@@ -139,7 +142,8 @@ private:
         }
     }
 
-    Node *findMinDelete(Node *current, Node *prev, Node *deletable) {
+    Node *findMinDelete(Node *current, Node *prev, Node *deletable) { //Метод для поиска минимального узла при удалении
+        count++;
         current->weight -= 1;
         if (current->left == nullptr) {
             if (current->right != nullptr && prev != deletable)
@@ -151,19 +155,19 @@ private:
         return findMinDelete(current->left, current, deletable);
     }
 
-    Node* findMin(Node *current) {
+    Node* findMin(Node *current) { //Метод для поиска минимального узла
         if (current->left == nullptr)
             return current;
         return findMin(current->left);
     }
 
-    Node *findMax(Node *current) {
+    Node *findMax(Node *current) { //Метод для поиска максимального узла
         if (current->right == nullptr)
             return current;
         return findMax(current->right);
     }
 
-    void deleteBackN(Node *current, K key, Node *prev = nullptr) {
+    void deleteBackN(Node *current, K key, Node *prev = nullptr) { //Метод для отмены изменений веса при удалении
         if (current == nullptr) {
             return;
         }
@@ -176,7 +180,8 @@ private:
         }
     }
 
-    bool deleteHelper(Node *current, K key, Node *prev = nullptr) {
+    bool deleteHelper(Node *current, K key, Node *prev = nullptr) { //Метод помощник для реализации удаления
+        count++;
         if (current == nullptr) {
             deleteBackN(root, key);
             return false;
@@ -238,7 +243,7 @@ private:
         }
     }
 
-    void verticalShowHelper(Node *current, int level = 1) {
+    void verticalShowHelper(Node *current, int level = 1) { //Метод помошник для вертикального показа дерева
         if (current == nullptr)
             return;
         verticalShowHelper(current->right, level + 1);
@@ -250,7 +255,7 @@ private:
         verticalShowHelper(current->left, level + 1);
     }
 
-    void copyTree(Node *current) {
+    void copyTree(Node *current) { //Метод для копирования дерева
         if (current == nullptr)
             return;
         add(current->key, current->value);
@@ -259,14 +264,14 @@ private:
     }
 
 public:
-    struct Node {
+    struct Node { //Структура узла дерева
         Node *left;
         Node *right;
         K key;
         T value;
         int weight;
 
-        Node(K key, T value, int _weight = 1) {
+        Node(K key, T value, int _weight = 1) { //Конструктор
             this->left = nullptr;
             this->right = nullptr;
             this->key = key;
@@ -275,32 +280,36 @@ public:
         }
     };
 
-    BinarySearchTree() {
+    BinarySearchTree() { //Конструктор
         root = nullptr;
         _size = 0;
+        count = 0;
     }
 
-    BinarySearchTree(K key, T value) {
+    BinarySearchTree(K key, T value) { //Конструктор с параметрами
         root = new Node(Node(key, value));
         _size = 0;
+        count = 0;
     }
 
-    BinarySearchTree(const BinarySearchTree &otherTree) {
+    BinarySearchTree(const BinarySearchTree &otherTree) { //Конструктор копирования
         _size = 0;
         root = nullptr;
         copyTree(otherTree.root);
+        count = 0;
     }
 
-    ~BinarySearchTree() {
+    ~BinarySearchTree() { //Деструктор
         this->clear();
     }
 
-    T &search(K key) {
+    T &search(K key) { //Доступ к данным по заданному ключу
         return searchHelper(root, key);
     }
 
-    bool add(K key, T value) {
+    bool add(K key, T value) { //Включение данных с заданным ключем
         if (root == nullptr) {
+            count++;
             root = new Node(Node(key, value));
             _size++;
             return true;
@@ -309,35 +318,41 @@ public:
         }
     }
 
-    int &size() {
+    int &size() { //Опрос размера дерева
         return this->_size;
     }
 
-    void clear() {
+    void clear() { //Очистка дерева
         while (_size != 0) {
             deleteByKey(root->key);
         }
     }
 
-    bool isEmpty() {
+    bool isEmpty() { //Проверка дерева на пустоту
         if (size())
             return false;
         else
             return true;
     }
 
-    bool deleteByKey(K keyOfDeletable) {
+    bool deleteByKey(K keyOfDeletable) { //Удаление данных с заданным ключем
         if (root == nullptr)
             return false;
         return deleteHelper(root, keyOfDeletable);
     }
 
-    void show() {
+    void show() { //Обход узлов дерева
         showHelper(root);
         std::cout << std::endl;
     }
 
-    int findIndex(K key) {
+    int countNode() { //Операция для сброса счетчика
+        int temp = count;
+        count = 0;
+        return temp;
+    }
+
+    int findIndex(K key) { //Операция для поиска индекса узла по ключу
         if (root == nullptr)
             return -1;
         Node *searchNode = root;
@@ -365,77 +380,37 @@ public:
         return indexNode;
     }
 
-    void verticalShow() {
+    void verticalShow() { //Вертикальный показ дерева
         verticalShowHelper(root);
     }
 
-    std::string toString() {
-        std::string str;
-        Node *temp = root;
-        if (temp != nullptr) {
-            std::stack<Node *> stack;
-            while (!stack.empty() || temp != nullptr) {
-                if (temp != nullptr) {
-                    stack.push(temp);
-                    temp = temp->left;
-                } else {
-                    temp = stack.top();
-                    str += std::to_string(temp->key);
-                    stack.pop();
-                    temp = temp->right;
-                }
-            }
-        }
-        return str;
-    }
+    class Iterator; //Объявление прямого итератора
 
-    std::string toStringN() {
-        std::string str;
-        Node *temp = root;
-        if (temp != nullptr) {
-            std::stack<Node *> stack;
-            while (!stack.empty() || temp != nullptr) {
-                if (temp != nullptr) {
-                    stack.push(temp);
-                    temp = temp->left;
-                } else {
-                    temp = stack.top();
-                    str += std::to_string(temp->weight);
-                    stack.pop();
-                    temp = temp->right;
-                }
-            }
-        }
-        return str;
-    }
+    class ReverseIterator; //Объявление обратного итератора
 
-    class Iterator;
-
-    class ReverseIterator;
-
-    Iterator begin() {
+    Iterator begin() { //Запрос прямого итератора
         return Iterator(this);
     }
 
-    Iterator end() {
+    Iterator end() { //Запрос “неустановленного” прямого итератора
         return Iterator(this, false);
     }
 
-    ReverseIterator rbegin() {
+    ReverseIterator rbegin() { //Запрос обратного итератора
         return ReverseIterator(this);
     }
 
-    ReverseIterator rend() {
+    ReverseIterator rend() { //Запрос “неустановленного” обратного итератора
         return ReverseIterator(this, false);
     }
 
-
-    class Iterator {
+//Итераторы
+    class Iterator {//Прямой итератор
     private:
-        BinarySearchTree<K, T> *tree;
-        Node *current;
+        BinarySearchTree<K, T> *tree; //Указатель на дерево
+        Node *current; //Указатель на текущий элемент итератора
     public:
-        Iterator(BinarySearchTree *_tree, bool isBegin = true) {
+        Iterator(BinarySearchTree *_tree, bool isBegin = true) { //Конструктор
             if (_tree->isEmpty()) {
                 tree = nullptr;
                 current = nullptr;
@@ -448,12 +423,12 @@ public:
             }
         }
 
-        Iterator(const Iterator &iterator) {
+        Iterator(const Iterator &iterator) { //Конструктор копирования
             tree = iterator.tree;
             current = iterator.current;
         }
 
-        bool operator==(const Iterator &other) {
+        bool operator==(const Iterator &other) { //Оператор ==
             if (other.tree != this->tree)
                 return false;
             if (other.current != this->current)
@@ -461,7 +436,7 @@ public:
             return true;
         }
 
-        bool operator!=(const Iterator &other) {
+        bool operator!=(const Iterator &other) { //Оператор !=
             if (other.tree != this->tree)
                 return true;
             if (other.current != this->current)
@@ -469,17 +444,17 @@ public:
             return false;
         }
 
-        Iterator &operator--(int) {
+        Iterator &operator--(int) { //Оператор --
             current = tree->_getPrev(current);
             return *this;
         }
 
-        Iterator &operator++(int) {
+        Iterator &operator++(int) { //Оператор ++
             current = tree->_getNext(current);
             return *this;
         }
 
-        T &operator*() {
+        T &operator*() { //Оператор *
             if (current != nullptr)
                 return current->value;
             else
@@ -487,12 +462,12 @@ public:
         }
     };
 
-    class ReverseIterator {
+    class ReverseIterator { //Обратный итератор
     private:
-        BinarySearchTree<K, T> *tree;
-        Node *current;
+        BinarySearchTree<K, T> *tree; //Указатель на дерево
+        Node *current; //Указатель на текущий элемент итератора
     public:
-        ReverseIterator(BinarySearchTree *_tree, bool isBegin = true) {
+        ReverseIterator(BinarySearchTree *_tree, bool isBegin = true) { //Конструктор
             if (_tree->isEmpty()) {
                 tree = nullptr;
                 current = nullptr;
@@ -505,12 +480,12 @@ public:
             }
         }
 
-        ReverseIterator(const ReverseIterator &iterator) {
+        ReverseIterator(const ReverseIterator &iterator) { //Конструктор копирования
             tree = iterator.tree;
             current = iterator.current;
         }
 
-        bool operator==(const ReverseIterator &other) {
+        bool operator==(const ReverseIterator &other) { //Оператор ==
             if (other.tree != this->tree)
                 return false;
             if (other.current != this->current)
@@ -518,7 +493,7 @@ public:
             return true;
         }
 
-        bool operator!=(const ReverseIterator &other) {
+        bool operator!=(const ReverseIterator &other) { //Оператор !=
             if (other.tree != this->tree)
                 return true;
             if (other.current != this->current)
@@ -526,17 +501,17 @@ public:
             return false;
         }
 
-        ReverseIterator &operator--(int) {
+        ReverseIterator &operator--(int) { //Оператор --
             current = tree->_getNext(current);
             return *this;
         }
 
-        ReverseIterator &operator++(int) {
+        ReverseIterator &operator++(int) { //Оператор ++
             current = tree->_getPrev(current);
             return *this;
         }
 
-        T &operator*() {
+        T &operator*() { //Оператор *
             if (current != nullptr)
                 return current->value;
             else
