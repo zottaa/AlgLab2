@@ -7,10 +7,6 @@
 #IncludeRegexTransform: 
 
 C:/Users/sasha/CLionProjects/AlgLab2/BinarySearchTree.h
-stack
--
-string
--
 
 C:/Users/sasha/CLionProjects/AlgLab2/main.cpp
 iostream
@@ -20,7 +16,5 @@ C:/Users/sasha/CLionProjects/AlgLab2/BinarySearchTree.h
 ctime
 -
 cmath
--
-iostream
 -
 
